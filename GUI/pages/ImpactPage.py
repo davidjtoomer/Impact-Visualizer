@@ -11,12 +11,12 @@ import matplotlib.cm as cm
 from models.ScanLine import ScanLine
 from models.Impact import Impact
 
-from GUI.components.GPage import GPage
-from GUI.components.GSection import GSection
-from GUI.components.GMainButton import GMainButton
-from GUI.components.GWidgetButton import GWidgetButton
+from gui.components.GPage import GPage
+from gui.components.GSection import GSection
+from gui.components.GMainButton import GMainButton
+from gui.components.GWidgetButton import GWidgetButton
 
-from GUI.constants import *
+from gui.constants import *
 
 class ImpactPage(GPage):
   def __init__(self, master = None, controller = None, home = None, *args, **kwargs):

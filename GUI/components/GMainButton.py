@@ -1,5 +1,5 @@
 import tkinter as tk
-from GUI.constants import *
+from gui.constants import *
 
 class GMainButton(tk.Frame):
   def __init__(self, master = None, text = None, command = None, *args, **kwargs):

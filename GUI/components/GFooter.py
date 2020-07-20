@@ -1,7 +1,7 @@
 import tkinter as tk
 
-from GUI.components.GWidgetButton import GWidgetButton
-from GUI.constants import *
+from gui.components.GWidgetButton import GWidgetButton
+from gui.constants import *
 
 class GFooter(tk.Frame):
   def __init__(self, master = None, controller = None, *args, **kwargs):

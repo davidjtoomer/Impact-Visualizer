@@ -1,7 +1,7 @@
 import tkinter as tk
-from GUI.components.GHeader import GHeader
-from GUI.components.GFooter import GFooter
-from GUI.constants import *
+from gui.components.GHeader import GHeader
+from gui.components.GFooter import GFooter
+from gui.constants import *
 
 class GPage(tk.Frame):
   def __init__(self, master = None, controller = None, title = '', *args, **kwargs):

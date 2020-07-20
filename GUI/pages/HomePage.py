@@ -1,14 +1,13 @@
 import tkinter as tk
 
-from GUI.components.GPage import GPage
-from GUI.components.GSection import GSection
-from GUI.components.GMainButton import GMainButton
-from GUI.components.GWidgetButton import GWidgetButton
-from GUI.pages.ImpactPage import ImpactPage
-from GUI.pages.ScanLinePage import ScanLinePage
-from GUI.pages.SurfacePage import SurfacePage
+from gui.components.GPage import GPage
+from gui.components.GSection import GSection
+from gui.components.GMainButton import GMainButton
+from gui.components.GWidgetButton import GWidgetButton
+from gui.pages.ImpactPage import ImpactPage
+from gui.pages.ScanLinePage import ScanLinePage
 
-from GUI.constants import *
+from gui.constants import *
 
 class HomePage(GPage):
   def __init__(self, master = None, controller = None, *args, **kwargs):
@@ -22,7 +21,6 @@ class HomePage(GPage):
     navigation.rowconfigure(1, weight = 0)
     navigation.columnconfigure(0, weight = 1)
     navigation.columnconfigure(1, weight = 1)
-    #nnavigation.columnconfigure(2, weight = 1)
     navigation.grid(row = 1, column = 0, sticky = 'nsew')
 
     nav_button_scanline = GMainButton(master = navigation, text = 'View\nIndividual\nScanlines', command = lambda: controller.show_page(ScanLinePage))
@@ -30,8 +28,3 @@ class HomePage(GPage):
 
     nav_button_impact = GMainButton(master = navigation, text = 'View\nWhole\nImpacts', command = lambda: controller.show_page(ImpactPage))
     nav_button_impact.grid(row = 0, column = 1, sticky = 'nsew')
-    
-    '''
-    nav_button_surface = GMainButton(master = navigation, text = 'View\nWhole\nSurfaces (todo)', command = lambda: controller.show_page(SurfacePage))
-    nav_button_surface.grid(row = 0, column = 2, sticky = 'nsew')
-    '''

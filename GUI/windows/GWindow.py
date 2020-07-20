@@ -3,13 +3,13 @@ from tkinter.tix import ScrolledWindow
 import tkinter.font as font
 
 # pages
-from GUI.pages.HomePage import HomePage
-from GUI.pages.ImpactPage import ImpactPage
-from GUI.pages.ScanLinePage import ScanLinePage
-from GUI.pages.SurfacePage import SurfacePage
+from gui.pages.HomePage import HomePage
+from gui.pages.ImpactPage import ImpactPage
+from gui.pages.ScanLinePage import ScanLinePage
+from gui.pages.SurfacePage import SurfacePage
 
 # styling
-from GUI.constants import *
+from gui.constants import *
 
 class GWindow(tk.Tk):
   def __init__(self, *args, **kwargs):

@@ -1,5 +1,5 @@
 import tkinter as tk
-from GUI.constants import *
+from gui.constants import *
 
 class GWidgetButton(tk.Frame):
   def __init__(self, master = None, *args, **kwargs):
