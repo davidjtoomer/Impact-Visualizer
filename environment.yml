@@ -2,8 +2,10 @@ name: impact-visualizer
 channels:
   - defaults
 dependencies:
-  - python=3.6
-  - matplotlib
+  - python=3.7
   - numpy
-  - pandas
-  - scipy
+  - pandas=1.0.5
+  - xlrd=1.2.0
+  - dash
+  - plotly=4.8
+  - scikit-learn=0.23.1

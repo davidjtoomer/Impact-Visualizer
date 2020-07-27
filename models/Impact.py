@@ -5,9 +5,9 @@ from scipy import interpolate
 from models.ScanLine import ScanLine
 
 class Impact:
-  def __init__(self, filenames):
+  def __init__(self, datafiles, filenames):
     self.num_scanlines = len(filenames)
-    self.scanlines = [ScanLine(filename) for filename in filenames] 
+    self.scanlines = [ScanLine(data, filename) for data, filename in zip(datafiles, filenames)] 
     self.xrange = self.scanlines[0].data[:, 0][-1]
     self.reset_ypos()
     self.combine_scanlines()
@@ -20,10 +20,10 @@ class Impact:
 
   def combine_scanlines(self):
     density = self.xrange / len(self.scanlines[0].data)
-    X = np.arange(0, self.xrange, density)
-    Y = np.array([scanline.ypos for scanline in self.scanlines])
+    self.X = np.arange(0, self.xrange, density)
+    self.Y = np.array([scanline.ypos for scanline in self.scanlines])
 
-    self.xgrid, self.ygrid = np.meshgrid(X, Y)
+    self.xgrid, self.ygrid = np.meshgrid(self.X, self.Y)
     self.zgrid = np.array([scanline.data_corrected_smooth[:, 1] for scanline in self.scanlines])
 
     '''
