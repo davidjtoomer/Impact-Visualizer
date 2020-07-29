@@ -29,20 +29,37 @@ conda activate impact-visualizer
 
 At this point, you should see a prefix in your terminal that looks something like <code>(impact-visualizer) username@device %</code>. This signifies that your virtual environment is working and you are using it currently.
 
-Activating the environment should automatically install all but one of the necessary dependencies (SK-Learn). You can download this final dependency by running the following: 
-
-~~~
-conda install scikit-learn
-~~~
-
 Now that all of the dependencies are set up, you are ready to run the program!
 
 # Running the Program
 
-This program runs in Python 3.6 or higher, which was installed in the conda environment. In order to run the program, simply run the following command:
+This program runs in Python 3.6 or higher, which was installed in the conda environment. In order to run the program, simply execute the following command:
 
 ~~~
-python main.py
+python app.py
 ~~~
 
-A graphics window leading you through the program should display at this point.
+After loading, your command line should display information that reads something like the following:
+
+~~~
+Dash is running on http://127.0.0.1:8050/
+
+  Warning: This is a development server. Do not use app.run_server
+  in production, use a production WSGI server like gunicorn instead.
+
+  * Serving Flask app "app" (lazy loading)
+  * Environment: production
+    WARNING: This is a development server. Do not use it in a production deployment.
+    Use a production WSGI server instead.
+  * Debug mode: on
+~~~
+
+This shows that the program is up and running on your computer. To see it in action, simply copy and paste the link in the first line (http://127.0.0.1:8050) into your favorite browser.
+
+# Exiting the Program
+
+Once you're done using the program, you can exit out of the app by first closing the browser tab. However, this won't fully turn off the server. To do this, go to your terminal, and type *Ctrl + c*, and you will have successfully ended the program. After this, you can run the following to deactivate the virtual environment:
+
+~~~
+conda deactivate
+~~~

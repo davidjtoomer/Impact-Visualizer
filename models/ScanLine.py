@@ -5,19 +5,13 @@ from sklearn import linear_model
 class ScanLine:
   def __init__(self, data, filename):
     try:
-      '''
-      startpos = filename.rfind('/') + 1
-      ypos_digits = 8
-      '''
       self.ypos = float(filename[:8])
     except:
-      self.ypos = None
+      y_step = 0.02
+      self.ypos = y_step * int(filename[filename.rfind('-') + 1: filename.find('.')])
 
     self.filename = filename
-    # self.filename_short = filename[filename.rfind('/') + 1:]
-    # self.data = pd.read_excel(filename, sheet_name='DATA', header=None, nrows=6000, usecols='E:F', keep_default_na=False).to_numpy()
     self.data = data.to_numpy()
-    self.data[:, 1] /= 10 # note: this is for scaling. microns to 10^-5 m
     self.slope_correction()
     self.smooth_width = 100
     self.smooth()

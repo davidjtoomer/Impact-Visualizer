@@ -1,12 +1,12 @@
-import io
-import base64
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 import dash
 import dash_html_components as html
 import dash_core_components as dcc
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
+import utils.preprocessing as preprocessing
+import utils.figures as figures
 from models.ScanLine import ScanLine
 from models.Impact import Impact
 
@@ -19,10 +19,7 @@ app = dash.Dash(
 )
 server = app.server
 
-# use daq boolean switch for regression line
-
 # layout
-# come back to column number names when writing css
 app.layout = html.Div(
   className = 'row twelve columns',
   children = [
@@ -34,13 +31,9 @@ app.layout = html.Div(
         html.H1(children = 'Impact Visualizer'),
         html.P(
           '''
-          - View source code (GitHub) by clicking "SRC"
-          - Upload impact files by clicking "Upload Files"
-          - Edit the impact metadata through the sidebar
-            - Default smoothing range: 100
-            - Y-positions are calculated from the filenames
-          - Edit individual scanline metadata by selecting that scanline's dropdown 
-          - Upload new impact files by clicking "Upload Files" again
+          - View source code (GitHub) by clicking "SOURCE"
+          - Upload impact files by clicking "UPLOAD DATA"
+          - Upload new impact files by clicking "UPLOAD DATA" again
           '''
         ),
         # source and upload buttons
@@ -78,55 +71,8 @@ app.layout = html.Div(
             )
           ]
         ),
-        '''
-        # impact metadata
-        html.Div(
-          className = 'impact-metadata',
-          children = [
-            # impact graph type
-            html.Div(
-              children = [
-                html.Label('Impact Graph Type'),
-                dcc.Dropdown(
-                  id = 'impact-display-type',
-                  options = [
-                    {
-                      'label': '3D Surface Plot',
-                      'value': '3D Surface Plot'
-                    },
-                    {
-                      'label': '2D Contour Plot',
-                      'value': '2D Contour Plot'
-                    }
-                  ]
-                )
-              ]
-            ),
-            # interpolation factor (num of lines placed between lines)
-            html.Div(
-              children = [
-                html.Label('Interpolation Factor'),
-                dcc.Input(
-                  id = 'interpolation-factor',
-                  type = 'number',
-                  value = 0,
-                  name = 'Interpolaion Factor',
-                  min = 0,
-                  step = 1
-                )
-              ]
-            )
-          ]
-        ),
-        '''
         # empty: scanline metadata
-        html.Div(
-          children = [
-            html.Div(id = 'scanline-info', children = [])
-            # scanline META meta (regression, smooth factor, colors...)
-            # individual scanline data (slope, intercept, which form of data)
-          ]
-        )
+        html.Div(id = 'scanline-toolbar')
       ]
     ),
     # right sidebar
@@ -134,64 +80,28 @@ app.layout = html.Div(
       className = 'eight columns graphs',
       children = [
         # impact graph
-        html.Div(
-          id = 'impact-graph-container',
-          children = [
-            dcc.Graph(
-              id = 'impact-graph'
-            )
-          ]
-        ),
+        html.Div(id = 'impact-graph-container'),
         # scanline tabs
-        '''
-        html.Div(
-          children = [
-            html.H1('Scanlines'),
-            # tabs with scanlines
-            html.Div(
-              children = []
-            )
-          ]
-        )
-        '''
+        html.Div(id = 'scanline-graph-container')
       ]
     )
   ]
 )
  
 # callbacks
-@app.callback( # make graphs visible
-  Output('impact-graph-container', 'children'),
-  [Input('upload-data', 'contents'),
-  Input('upload-data', 'filename')]
+@app.callback( # make graphs visible upon file submission
+  Output('scanline-graph-container', 'children'),
+  [
+    Input('upload-data', 'contents'),
+    Input('upload-data', 'filename')
+  ]
 )
 def load_data(contents, filenames):
   if contents:
-    datafiles = []
-    for content in contents:
-      content_type, content_string = content.split(',')
-      decoded = base64.b64decode(content_string)
-      datafiles.append(pd.read_excel(io.BytesIO(decoded), sheet_name = 'DATA', header = None, nrows = 6000, usecols = 'E:F', keep_default_na = False))
-
+    datafiles = preprocessing.parse_impact(contents)
     impact = Impact(datafiles, filenames)
-    figure = go.Figure(
-      data = [
-        go.Surface(
-          x = impact.xgrid, 
-          y = impact.ygrid,
-          z = impact.zgrid
-        )
-      ]
-    )
-    figure.update_layout(scene_aspectmode='data')
-    return html.Div(
-      children = [
-        dcc.Graph(
-          id = 'impact-graph',
-          figure = figure,
-        )
-      ]
-    )
+    impact_figure = figures.impact_graph(impact)
+    return impact_figure
 
 # run the server
 if __name__ == '__main__':

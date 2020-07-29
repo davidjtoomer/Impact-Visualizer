@@ -9,3 +9,6 @@ dependencies:
   - dash
   - plotly=4.8
   - scikit-learn=0.23.1
+  - pip
+  - pip:
+    - dash_daq==0.5.0
