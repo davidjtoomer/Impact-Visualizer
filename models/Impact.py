@@ -1,7 +1,5 @@
 import numpy as np
 import pandas as pd
-from scipy import interpolate
-
 from models.ScanLine import ScanLine
 
 class Impact:
@@ -24,3 +22,6 @@ class Impact:
     self.X = np.arange(0, self.xrange, density)
     self.Y = np.array([scanline.ypos for scanline in self.scanlines])
     self.Z = np.array([scanline.data_corrected_smooth[:, 1] for scanline in self.scanlines])
+    # range values for contour lines
+    self.zmin =  np.min(self.Z)
+    self.zmax = np.max(self.Z)
