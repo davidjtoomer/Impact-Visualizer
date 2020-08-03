@@ -4,9 +4,9 @@ import plotly.graph_objects as go
 import dash
 import dash_html_components as html
 import dash_core_components as dcc
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output, State, ALL, MATCH
 import utils.preprocessing as preprocessing
-import utils.figures as figures
+import utils.callbacks as callbacks
 from models.ScanLine import ScanLine
 from models.Impact import Impact
 
@@ -15,8 +15,10 @@ app = dash.Dash(
   meta_tags = [{
     'name': 'viewport', 
     'content': 'width=device-width'
-  }]
+  }],
+  suppress_callback_exceptions = True
 )
+
 server = app.server
 
 # layout
@@ -71,7 +73,7 @@ app.layout = html.Div(
             )
           ]
         ),
-        # empty: scanline metadata
+        # empty: scanline toolbar
         html.Div(id = 'scanline-toolbar')
       ]
     ),
@@ -81,7 +83,7 @@ app.layout = html.Div(
       children = [
         # impact graph
         html.Div(id = 'impact-graph-container'),
-        # scanline tabs
+        # scanline graphs
         html.Div(id = 'scanline-graph-container')
       ]
     )
@@ -90,7 +92,11 @@ app.layout = html.Div(
  
 # callbacks
 @app.callback( # make graphs visible upon file submission
-  Output('scanline-graph-container', 'children'),
+  [
+    Output('impact-graph-container', 'children'),
+    Output('scanline-toolbar', 'children'),
+    Output('scanline-graph-container', 'children')
+  ],
   [
     Input('upload-data', 'contents'),
     Input('upload-data', 'filename')
@@ -99,10 +105,44 @@ app.layout = html.Div(
 def load_data(contents, filenames):
   if contents:
     datafiles = preprocessing.parse_impact(contents)
+    global impact 
     impact = Impact(datafiles, filenames)
-    impact_figure = figures.impact_graph(impact)
-    return impact_figure
+    impact_figure = callbacks.impact_figure(impact)
+    scanline_toolbar = callbacks.scanline_toolbar(impact)
+
+    scanline_button_divs = []
+    for i, _ in enumerate(impact.scanlines):
+      scanline_button_divs.append(html.Div(id = dict(
+        type = 'scanline-graph-display',
+        index = i
+      )))
+    
+    return impact_figure, scanline_toolbar, scanline_button_divs
+  return None, None, None
+
+@app.callback(
+  Output(dict(
+    type = 'scanline-graph-display',
+    index = MATCH
+  ), 'children'),
+  [
+    Input(dict(
+      type = 'scanline-view-button',
+      index = MATCH
+    ), 'n_clicks')
+  ],
+  [
+    State(dict(
+      type = 'scanline-view-button',
+      index = MATCH
+    ), 'id')
+  ]
+)
+def display_scanline(n_clicks, scanline_id):
+  if n_clicks and n_clicks % 2:
+    return callbacks.scanline_figure(impact, scanline_id['index'])
+  return None
 
 # run the server
 if __name__ == '__main__':
-  app.run_server(debug=True)
+  app.run_server(debug = True)
