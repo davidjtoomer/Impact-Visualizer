@@ -31,6 +31,18 @@ At this point, you should see a prefix in your terminal that looks something lik
 
 Now that all of the dependencies are set up, you are ready to run the program!
 
+# Updating the Virtual Environment
+
+Once you have created the virtual environment, there may be adjustments to the packages included in <code>environment.yml</code>. Instead of recreating the virtual environment every time this happens, you can easily update the virtual environment by running the following command after the new YAML file is downloaded:
+
+~~~
+conda env update -f environment.yml --prune
+~~~
+
+You'll notice that this is very similar to the command used to create the virtual environment, but with "update" in lieu of "create." Adding <code>--prune</code> ensures that if a requirement is removed from <code>environment.yml</code>, it is also removed from the virtual environment once you update it.
+
+From there, you can activate/deactivate the virtual environment as normal.
+
 # Running the Program
 
 This program runs in Python 3.6 or higher, which was installed in the conda environment. In order to run the program, simply execute the following command:
