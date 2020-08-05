@@ -104,18 +104,22 @@ app.layout = html.Div(
 )
 def load_data(contents, filenames):
   if contents:
+    matlab_contents, _ = preprocessing.extract_matlab(contents, filenames)
+    ystep = preprocessing.extract_ystep(matlab_contents)
     datafiles = preprocessing.parse_impact(contents)
     global impact 
-    impact = Impact(datafiles, filenames)
+    impact = Impact(datafiles, filenames, ystep)
     impact_figure = callbacks.impact_figure(impact)
     scanline_toolbar = callbacks.scanline_toolbar(impact)
 
     scanline_button_divs = []
     for i, _ in enumerate(impact.scanlines):
-      scanline_button_divs.append(html.Div(id = dict(
-        type = 'scanline-graph-display',
-        index = i
-      )))
+      scanline_button_divs.append(html.Div(
+        id = dict(
+          type = 'scanline-graph-display',
+          index = i
+        )
+      ))
     
     return impact_figure, scanline_toolbar, scanline_button_divs
   return None, None, None
