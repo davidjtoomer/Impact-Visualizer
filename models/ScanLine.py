@@ -3,12 +3,11 @@ import pandas as pd
 from sklearn import linear_model
 
 class ScanLine:
-  def __init__(self, data, filename):
+  def __init__(self, data, filename, ystep = 0.02):
     try:
       self.ypos = float(filename[:8])
     except:
-      y_step = 0.02
-      self.ypos = y_step * int(filename[filename.rfind('-') + 1: filename.find('.')])
+      self.ypos = ystep * int(filename[filename.rfind('-') + 1: filename.find('.')])
 
     self.filename = filename
     self.data = data.to_numpy()
@@ -20,7 +19,6 @@ class ScanLine:
     x = self.data[:, 0].reshape(-1, 1)
     y = self.data[:, 1].reshape(-1, 1)
 
-    # linear regression
     lr = linear_model.LinearRegression()
     lr.fit(x, y.ravel())
     regression = lr.predict(x)

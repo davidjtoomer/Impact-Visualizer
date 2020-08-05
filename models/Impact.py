@@ -3,9 +3,9 @@ import pandas as pd
 from models.ScanLine import ScanLine
 
 class Impact:
-  def __init__(self, datafiles, filenames):
+  def __init__(self, datafiles, filenames, ystep):
     self.num_scanlines = len(filenames)
-    scanlines = [ScanLine(data, filename) for data, filename in zip(datafiles, filenames)]
+    scanlines = [ScanLine(data, filename, ystep) for data, filename in zip(datafiles, filenames)]
     self.scanlines = sorted(scanlines, key = lambda x: x.ypos) 
     self.xrange = self.scanlines[0].data[:, 0][-1]
     self.reset_ypos()
