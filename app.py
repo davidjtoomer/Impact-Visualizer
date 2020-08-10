@@ -94,9 +94,8 @@ app.layout = html.Div(
     )
   ]
 )
- 
-# callbacks
-@app.callback( # make graphs visible upon file submission
+
+@app.callback(
   [
     Output('impact-graph-container', 'children'),
     Output('impact-toolbar', 'children'),
@@ -120,17 +119,33 @@ def load_data(contents, filenames):
     impact_toolbar = callbacks.impact_toolbar(impact)
     scanline_toolbar = callbacks.scanline_toolbar(impact)
 
-    scanline_button_divs = []
+    scanline_graphs = [
+      html.Div(
+        id = 'scanline-graph-all-display',
+        className = 'scanline-graph-all-display'
+      )
+    ]
     for i, _ in enumerate(impact.scanlines):
-      scanline_button_divs.append(html.Div(
+      scanline_graphs.append(html.Div(
         id = dict(
           type = 'scanline-graph-display',
           index = i
         )
       ))
     
-    return impact_figure, impact_toolbar, scanline_button_divs, scanline_toolbar 
+    return impact_figure, impact_toolbar, scanline_graphs, scanline_toolbar 
   return None, None, None, None
+
+@app.callback(
+  Output('scanline-graph-all-display', 'children'),
+  [
+    Input('scanline-view-all-button', 'n_clicks')
+  ]
+)
+def display_all_scanlines(n_clicks):
+  if n_clicks and n_clicks % 2:
+    return callbacks.all_scanline_figure(impact)
+  return None
 
 @app.callback(
   Output(dict(
@@ -154,7 +169,6 @@ def display_scanline(n_clicks, scanline_id):
   if n_clicks and n_clicks % 2:
     return callbacks.scanline_figure(impact, scanline_id['index'])
   return None
-
 
 @app.callback(
   Output('impact-graph', 'figure'),

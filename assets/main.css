@@ -285,7 +285,8 @@ input[type="button"] {
   margin-bottom: 35px;
 }
 
-.scanline-view-button {
+.scanline-view-button,
+.scanline-view-all-button {
   margin-top: 2px;
   margin-bottom: 2px;
   margin-left: 7%;

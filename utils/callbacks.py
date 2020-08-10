@@ -23,7 +23,8 @@ def impact_figure(impact):
       yaxis_title = 'Y (mm)',
       zaxis_title = 'Z (µm)',
     ),
-    font_size = 10
+    font_size = 10,
+    height = 600
   )
 
   return figure, [
@@ -306,7 +307,7 @@ def impact_toolbar(impact):
       id = 'impact-zscale-container',
       className = 'impact-zscale-container',
       children = [
-        html.H6('Z-Axis Scale'),
+        html.H6('Z-Axis Scale (Logarithmic)'),
         html.Div(
           id = 'z-scale-slider-container',
           className = 'z-scale-slider-container',
@@ -348,9 +349,55 @@ def scanline_toolbar(impact):
   return [
     html.H2('Scanline Toolbar'),
     html.Div(
+      id = 'scanline-toolbar-view-all',
+      className = 'scanline-toolbar-view-all',
+      children = [
+        html.H6('All Scanlines'),
+        html.Button(
+          'View All (One Figure)',
+          id = 'scanline-view-all-button',
+          className = 'scanline-view-all-button',
+        )
+      ]
+    ),
+    html.Div(
       id = 'scanline-toolbar-scanlines',
       className = 'scanline-toolbar-scanlines',
-      children = [scanline for scanline in scanline_info]
+      children = [
+        html.H6('Individual Scanlines'),
+        *[scanline for scanline in scanline_info]
+      ]
+    )
+  ]
+
+def all_scanline_figure(impact):
+  figure = go.Figure()
+
+  figure.add_traces(
+    [
+      go.Scatter(
+        x = scanline.data_corrected_smooth[:, 0],
+        y = scanline.data_corrected_smooth[:, 1],
+        name = f'Scanline {i + 1}',
+        visible = 'legendonly'
+      )
+      for i, scanline in enumerate(impact.scanlines)
+    ]
+  )
+
+  figure.update_layout(
+    height = 500,
+    title_text = 'Superimposed Scanlines'
+  )
+
+  return [
+    html.Div(
+      id = 'scanline-graphs-header',
+      className = 'scanline-graphs-header'
+    ),
+    dcc.Graph(
+      id = 'scanline-graph-all',
+      figure = figure
     )
   ]
 
