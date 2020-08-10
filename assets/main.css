@@ -59,13 +59,10 @@
   display: flex;
 }
 
-.instruction {
-  min-width: 300px;
-  max-width: 300px;
-}
-
 .graphs {
   flex-grow: 1;
+  height: 100vh;
+  overflow-y: scroll;
 }
 
 .column,
@@ -120,9 +117,17 @@ body {
   padding: 0px;
   display: flex;
   flex-direction: column;
-  width: 100%;
   min-height: 100vh;
   overflow: auto;
+  min-width: 300px;
+  max-width: 300px;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.instruction-text {
+  margin-right: 9%;
 }
 
 #_dash-app-content>div {
@@ -138,6 +143,60 @@ body {
   margin-bottom: 20px;
 }
 
+.contour-slider-container {
+  display: flex;
+  width: 100%;
+  margin-left: 9%;
+}
+
+.num-contours-slider {
+  width: 60%;
+  padding: 0 20px 0 0 !important;
+}
+
+.colorscale-dropdown {
+  margin: 0 9%;
+}
+
+.projection-dropdown {
+  margin: 0 9%;
+}
+
+.view-dropdown {
+  margin: 0 9%;
+}
+
+.x-range-slider-container {
+  display: flex;
+  margin: 0 9%;
+  justify-content: space-between;
+}
+
+.x-range-slider {
+  width: 60%;
+  padding: 0 20px;
+}
+
+.y-range-slider-container {
+  display: flex;
+  margin: 0 9%;
+  justify-content: space-between;
+}
+
+.y-range-slider {
+  width: 60%;
+  padding: 0 20px;
+}
+
+.z-scale-slider-container {
+  display: flex;
+  margin: 0 9%;
+}
+
+.z-scale-slider {
+  width: 60%;
+  padding: 0 20px 0 0 !important;
+}
 
 /* Typography
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -384,7 +443,7 @@ input[type="button"].button-primary:focus {
   display: flex;
   flex-direction: column;
   width: 100%;
-  overflow: auto; 
+  overflow: auto;
   height: 50px;
 }
 
@@ -666,20 +725,23 @@ li {
 /* Tables
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 table {
-border-collapse: separate;
-border: 1px solid black;
+  border-collapse: separate;
+  border: 1px solid black;
 }
 th,
 td {
-padding: 12px 15px;
-text-align: center;
-border-bottom: 1px solid #E1E1E1; }
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #E1E1E1; 
+}
 th:first-child,
 td:first-child {
-padding-left: 0; }
+  padding-left: 0; 
+}
 th:last-child,
 td:last-child {
-padding-right: 0; }
+  padding-right: 0; 
+}
 
 
 /* Spacing
