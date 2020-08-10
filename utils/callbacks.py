@@ -1,5 +1,6 @@
 import plotly.graph_objects as go
 from plotly import subplots
+import plotly.express as px
 import dash
 import dash_html_components as html
 import dash_core_components as dcc
@@ -12,273 +13,20 @@ def impact_figure(impact):
     go.Surface(
       x = impact.X,
       y = impact.Y,
-      z = impact.Z,
-      colorscale = 'Jet',
+      z = impact.Z
     )
   )
 
   figure.update_layout(
-    scene_camera = dict(
-      projection = dict(
-        type = 'orthographic'
-      )
-    )
+    scene = dict(
+      xaxis_title = 'X (mm)',
+      yaxis_title = 'Y (mm)',
+      zaxis_title = 'Z (µm)',
+    ),
+    font_size = 10
   )
 
-  figure.update_scenes(
-    aspectmode = 'manual',
-    aspectratio = dict(
-      x = impact.xrange / impact.yrange,
-      y = 1,
-      z = 1
-    )
-  )
-
-  figure.update_layout(
-    updatemenus = [
-      # surface
-      dict(
-        buttons = list(
-          [
-            dict(
-              args = ['type', 'surface'],
-              label = '3D Surface',
-              method = 'restyle'
-            ),
-            dict(
-              args = ['type', 'contour'],
-              label = 'Contour',
-              method = 'restyle'
-            )
-          ]
-        ),
-        direction = 'down',
-        pad = {'r': 10, 't': 10},
-        showactive = True,
-        y = 1
-      ),
-      # contours
-      dict(
-        buttons = list(
-          [
-            dict(
-              args = ['contours', dict(
-                z = dict(
-                  show = False
-                )
-              )],
-              label = 'No Contours',
-              method = 'restyle'
-            ),
-            *[
-              dict(
-                args = ['contours', dict(
-                  z = dict(
-                    show = True,
-                    start = impact.zmin,
-                    end = impact.zmax,
-                    size = (impact.zmax - impact.zmin) / (i - 1)
-                  )
-                )],
-                label = f'{i} Contour Lines',
-                method = 'restyle'
-              ) for i in range(5, 31, 5)
-            ]
-          ]
-        ),
-        direction = 'down',
-        pad = {'r': 10, 't': 10},
-        showactive = True,
-        y = 0.8
-      ),
-      # colorscale
-      dict(
-        buttons = list(
-          [
-            dict(
-              args = ['colorscale', 'Jet'],
-              label = 'Jet',
-              method = 'restyle'
-            ),
-            dict(
-              args = ['colorscale', 'Viridis'],
-              label = 'Viridis',
-              method = 'restyle'
-            ),
-            dict(
-              args = ['colorscale', 'RdBu'],
-              label = 'Red-Blue',
-              method = 'restyle'
-            )
-          ]
-        ),
-        direction = 'down',
-        pad = {'r': 10, 't': 10},
-        showactive = True,
-        y = 0.6
-      ),
-      # projection
-      dict(
-        buttons = list(
-          [
-            dict(
-              args = ['scene.camera.projection.type', 'orthographic'],
-              label = 'Orthographic Projection',
-              method = 'relayout'
-            ),
-            dict(
-              args = ['scene.camera.projection.type', 'perspective'],
-              label = 'Perspective Projection',
-              method = 'relayout'
-            )
-          ]
-        ),
-        direction = 'down',
-        pad = {'r': 10, 't': 10},
-        showactive = True,
-        y = 0.4
-      ),
-      # view
-      dict(
-        buttons = list(
-          [
-            dict(
-              args = [
-                {
-                  'scene.camera.eye': dict(
-                    x = 1.25, 
-                    y = 1.25, 
-                    z = 1.25
-                  ),
-                  'scene.camera.up': dict(
-                    x = 0,
-                    y = 0,
-                    z = 1
-                  )
-                }
-              ],
-              label = 'Default View',
-              method = 'relayout'
-            ),
-            dict(
-              args = [
-                {
-                  'scene.camera.eye': dict(
-                    x = 0., 
-                    y = 0., 
-                    z = 2.5
-                  ),
-                  'scene.camera.up': dict(
-                    x = 0,
-                    y = 1,
-                    z = 0
-                  )
-                }
-              ],
-              label = 'Top View (+XY)',
-              method = 'relayout'
-            ),
-            dict(
-              args = [
-                {
-                  'scene.camera.eye': dict(
-                    x = 0., 
-                    y = 0., 
-                    z = -2.5
-                  ),
-                  'scene.camera.up': dict(
-                    x = 0,
-                    y = 1,
-                    z = 0
-                  )
-                }
-              ],
-              label = 'Bottom View (-XY)',
-              method = 'relayout'
-            ),
-            dict(
-              args = [
-                {
-                  'scene.camera.eye': dict(
-                    x = 0., 
-                    y = 2.5, 
-                    z = 0.
-                  ),
-                  'scene.camera.up': dict(
-                    x = 0,
-                    y = 0,
-                    z = 1
-                  )
-                }
-              ],
-              label = 'Front View (+XZ)',
-              method = 'relayout'
-            ),
-            dict(
-              args = [
-                {
-                  'scene.camera.eye': dict(
-                    x = 0., 
-                    y = -2.5, 
-                    z = 0.
-                  ),
-                  'scene.camera.up': dict(
-                    x = 0,
-                    y = 0,
-                    z = 1
-                  )
-                }
-              ],
-              label = 'Back View (-XZ)',
-              method = 'relayout'
-            ),
-            dict(
-              args = [
-                {
-                  'scene.camera.eye': dict(
-                    x = 2.5, 
-                    y = 0., 
-                    z = 0.
-                  ),
-                  'scene.camera.up': dict(
-                    x = 0,
-                    y = 0,
-                    z = 1
-                  )
-                }
-              ],
-              label = 'Right View (+YZ)',
-              method = 'relayout'
-            ),
-            dict(
-              args = [
-                {
-                  'scene.camera.eye': dict(
-                    x = -2.5, 
-                    y = 0., 
-                    z = 0.
-                  ),
-                  'scene.camera.up': dict(
-                    x = 0,
-                    y = 0,
-                    z = 1
-                  )
-                }
-              ],
-              label = 'Left View (-YZ)',
-              method = 'relayout'
-            )
-          ]
-        ),
-        direction = 'down',
-        pad = {'r': 10, 't': 10},
-        showactive = True,
-        y = 0.2
-      )
-    ]
-  )
-
-  return [
+  return figure, [
     html.Div(
       id = 'impact-graph-header',
       className = 'impact-graph-header'
@@ -289,12 +37,293 @@ def impact_figure(impact):
     )
   ]
 
-def impact_toolbar():
+def update_impact(impact, figure, num_contours, colorscale, projection, view, x_range, y_range, z_scale):
+  # contours
+  if num_contours:
+    contours = dict(
+      z = dict(
+        show = True,
+        start = impact.zmin,
+        end = impact.zmax,
+        size = (impact.zmax - impact.zmin) / (num_contours)
+      ),
+    )
+  else:
+    contours = dict(
+      z = dict(
+        show = False
+      )
+    )
+  figure.data[0]['contours'] = contours
+
+  # colorscale
+  figure.data[0]['colorscale'] = colorscale
+
+  # projection
+  figure.update_layout(
+    scene_camera = dict(
+      projection = dict(
+        type = projection
+      )
+    )
+  )
+
+  # view
+  if view == 'default':
+    x_eye, y_eye, z_eye = 1.25, 1.25, 1.25
+    x_up, y_up, z_up = 0, 0, 1
+  elif view == 'top':
+    x_eye, y_eye, z_eye = 0., 0., 2.5
+    x_up, y_up, z_up = 0, 1, 0
+  elif view == 'bottom':
+    x_eye, y_eye, z_eye = 0., 0., -2.5
+    x_up, y_up, z_up = 0, 1, 0
+  elif view == 'front':
+    x_eye, y_eye, z_eye = 0., 2.5, 0.
+    x_up, y_up, z_up = 0, 0, 1
+  elif view == 'back':
+    x_eye, y_eye, z_eye = 0., -2.5, 0.
+    x_up, y_up, z_up = 0, 0, 1
+  elif view == 'right':
+    x_eye, y_eye, z_eye = 2.5, 0, 0.
+    x_up, y_up, z_up = 0, 0, 1
+  elif view == 'left':
+    x_eye, y_eye, z_eye = -2.5, 0, 0.
+    x_up, y_up, z_up = 0, 0, 1
+  figure.update_layout(
+    scene_camera = dict(
+      up = dict(
+        x = x_up,
+        y = y_up,
+        z = z_up
+      ),
+      center = dict(
+        x = 0,
+        y = 0,
+        z = 0
+      ),
+      eye = dict(
+        x = x_eye,
+        y = y_eye,
+        z = z_eye
+      )
+    )
+  )
+
+  # x- and y-range
+  figure.update_layout(
+    scene = dict(
+      xaxis = dict(
+        range = (x_range[0], x_range[1])
+      ),
+      yaxis = dict(
+        range = (y_range[0], y_range[1])
+      )
+    )
+  )
+
+  # z_scale
+  figure.update_scenes(
+    aspectmode = 'manual',
+    aspectratio = dict (
+      x = (x_range[1] - x_range[0]) / (y_range[1] - y_range[0]),
+      y = 1,
+      z = 10 ** z_scale
+    )
+  )
+
+  return figure
+
+def impact_toolbar(impact):
   return [
     html.H2('Impact Toolbar'),
-    # axis limit double sliders (???)
-    # control z scale
-      # see if you can access the figure from outside of the callback so the whole graph doesn't have to rerender
+    # contours
+    html.Div(
+      id = 'impact-contour-container',
+      className = 'impact-toolbar-subcontainer',
+      children = [
+        html.H6('Number of Contours'),
+        html.Div(
+          id = 'contour-slider-container',
+          className = 'contour-slider-container',
+          children = [
+            dcc.Slider(
+              id = 'num-contours-slider',
+              className = 'num-contours-slider',
+              min = 0,
+              max = 30,
+              step = 1,
+              value = 0
+            ),
+            html.Div(id = 'display-num-contours')
+          ]
+        )
+      ]
+    ),
+    # colorscale
+    html.Div(
+      id = 'impact-colorscale-container',
+      className = 'impact-contour-container',
+      children = [
+        html.H6('Colorscale'),
+        dcc.Dropdown(
+          id = 'colorscale-dropdown',
+          className = 'colorscale-dropdown',
+          options = [
+            {
+              'label': 'Jet', 
+              'value': 'Jet'
+            },
+            {
+              'label': 'Viridis', 
+              'value': 'Viridis'
+            },
+            {
+              'label': 'Red-Blue', 
+              'value': 'RdBu'
+            }
+          ],
+          value = 'Jet'
+        )
+      ]
+    ),
+    # projection
+    html.Div(
+      id = 'impact-projection-container',
+      className = 'impact-projection-container',
+      children = [
+        html.H6('Projection'),
+        dcc.Dropdown(
+          id = 'projection-dropdown',
+          className = 'projection-dropdown',
+          options = [
+            {
+              'label': 'Orthographic',
+              'value': 'orthographic'
+            },
+            {
+              'label': 'Perspective',
+              'value': 'perspective'
+            }
+          ],
+          value = 'orthographic'
+        )
+      ]
+    ),
+    # view
+    html.Div(
+      id = 'impact-view-container',
+      className = 'impact-view-container',
+      children = [
+        html.H6('View'),
+        dcc.Dropdown(
+          id = 'view-dropdown',
+          className = 'view-dropdown',
+          options = [
+            {
+              'label': 'Default View',
+              'value': 'default'
+            },
+            {
+              'label': 'Top View (+XY)',
+              'value': 'top'
+            },
+            {
+              'label': 'Bottom View (-XY)',
+              'value': 'bottom'
+            },
+            {
+              'label': 'Front View (+XZ)',
+              'value': 'front'
+            },
+            {
+              'label': 'Back View (-XZ)',
+              'value': 'back'
+            },
+            {
+              'label': 'Right View (+YZ)',
+              'value': 'right'
+            },
+            {
+              'label': 'Left View (-YZ)',
+              'value': 'left'
+            }
+          ],
+          value = 'default'
+        )
+      ]
+    ),
+    # x-range
+    html.Div(
+      id = 'impact-xrange-container',
+      className = 'impact-xrange-container',
+      children = [
+        html.H6('X-Axis Range'),
+        html.Div(
+          id = 'x-range-slider-container',
+          className = 'x-range-slider-container',
+          children = [
+            html.Div(id = 'left-x-range-slider'),
+            dcc.RangeSlider(
+              id = 'x-range-slider',
+              className = 'x-range-slider',
+              min = 0,
+              max = impact.xrange,
+              step = impact.xrange / 25,
+              value = [0, impact.xrange]
+            ),
+            html.Div(id = 'right-x-range-slider')
+          ]
+        )
+      ]
+    ),
+    # y-range
+    html.Div(
+      id = 'impact-yrange-container',
+      className = 'impact-yrange-container',
+      children = [
+        html.H6('Y-Axis Range'),
+        html.Div(
+          id = 'y-range-slider-container',
+          className = 'y-range-slider-container',
+          children = [
+            html.Div(id = 'left-y-range-slider'),
+            dcc.RangeSlider(
+              id = 'y-range-slider',
+              className = 'y-range-slider',
+              min = 0,
+              max = impact.yrange,
+              step = impact.yrange / 25,
+              value = [0, impact.yrange]
+            ),
+            html.Div(id = 'right-y-range-slider')
+          ]
+        )
+      ]
+    ),
+    # z-scale
+    html.Div(
+      id = 'impact-zscale-container',
+      className = 'impact-zscale-container',
+      children = [
+        html.H6('Z-Axis Scale'),
+        html.Div(
+          id = 'z-scale-slider-container',
+          className = 'z-scale-slider-container',
+          children = [
+            dcc.Slider(
+              id = 'z-scale-slider',
+              className = 'z-scale-slider',
+              min = -1,
+              max = 1,
+              step = 0.1,
+              value = 0
+            ),
+            html.Div(id = 'display-z-scale')
+          ]
+        )
+      ]
+    )
   ]
 
 def scanline_toolbar(impact):
@@ -361,10 +390,6 @@ def scanline_figure(impact, index):
     title_text = f'Scanline {index + 1}: {scanline.ypos:.5f}mm',
     showlegend = False
   )
-  
-  # regression button (yes no dropdown)
-  # change moving average scale (dropdown with values between 100-500)
-  # something with slope and intercept values
 
   return [
     html.Div(
