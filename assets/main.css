@@ -1,32 +1,6 @@
-/* Table of contents
-––––––––––––––––––––––––––––––––––––––––––––––––––
-- Plotly.js
-- Grid
-- Base Styles
-- Typography
-- Links
-- Buttons
-- Forms
-- Lists
-- Code
-- Tables
-- Spacing
-- Utilities
-- Clearing
-- Media Queries
-*/
-
-/* PLotly.js 
+/* Styling modified from Plotly.js 
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-/* plotly.js's modebar's z-index is 1001 by default
- * https://github.com/plotly/plotly.js/blob/7e4d8ab164258f6bd48be56589dacd9bdd7fded2/src/css/_modebar.scss#L5
- * In case a dropdown is above the graph, the dropdown's options
- * will be rendered below the modebar
- * Increase the select option's z-index
- */
 
-/* This was actually not quite right -
-   dropdowns were overlapping each other (edited October 26)
 /* Remove Undo Button
 --------------------------------------------------*/
 ._dash-undo-redo {
@@ -154,35 +128,20 @@ body {
   padding: 0 20px 0 0 !important;
 }
 
-.colorscale-dropdown {
-  margin: 0 9%;
-}
-
-.projection-dropdown {
-  margin: 0 9%;
-}
-
+.colorscale-dropdown,
+.projection-dropdown, 
 .view-dropdown {
   margin: 0 9%;
 }
 
-.x-range-slider-container {
-  display: flex;
-  margin: 0 9%;
-  justify-content: space-between;
-}
-
-.x-range-slider {
-  width: 60%;
-  padding: 0 20px;
-}
-
+.x-range-slider-container,
 .y-range-slider-container {
   display: flex;
   margin: 0 9%;
   justify-content: space-between;
 }
 
+.x-range-slider,
 .y-range-slider {
   width: 60%;
   padding: 0 20px;
@@ -223,50 +182,6 @@ p {
   font-size: 1.2rem;
   margin-left: 9%;
 }
-
-
-label {
-  margin-top: 20px;
-  margin-left: 9%;
-  color:#407DFA;
-  font-family: "Geneva", "Tahoma", "Verdana", "sans-serif"
-}
-
-.result {
-  margin-top: 5%;
-  margin-bottom: 5%;
-}
-
-.tabs {
-  max-width: 550px;
-  width: 100%;
-  font-family: "Geneva", "Tahoma", "Verdana", "sans-serif";
-}
-
-
-/* Blockquotes
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-blockquote {
-  border-left: 4px lightgrey solid;
-  padding-left: 1rem;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  margin-left: 0rem;
-}
-
-
-/* Links
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-a {
-  color: #1EAEDB; 
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-a:hover {
-  color: #0FA0CE; 
-}
-
 
 /* Buttons
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -348,7 +263,6 @@ input[type="button"] {
   border: transparent !important;
 }
 
-
 .button-submit {
   margin-left: 5px;
   height: 38px;
@@ -405,30 +319,8 @@ button:focus,
 input[type="submit"]:focus,
 input[type="reset"]:focus,
 input[type="button"]:focus {
-  color: #333;
+  color: #01183A;
   outline: 0; 
-}
-
-.button.button-primary:hover,
-button.button-primary:hover,
-input[type="submit"].button-primary:hover,
-input[type="reset"].button-primary:hover,
-input[type="button"].button-primary:hover,
-.button.button-primary:focus,
-button.button-primary:focus,
-input[type="submit"].button-primary:focus,
-input[type="reset"].button-primary:focus,
-input[type="button"].button-primary:focus {
-  color: #FFF;
-  background-color: #1EAEDB;
-  border-color: #1EAEDB; 
-}
-
-#tabs-content-example>div>div,
-.lower-canvas,
-.upper-canvas,
-.canvas-container { 
-  width: 65vw !important;
 }
 
 .scanline-toolbar-scanlines {
@@ -450,367 +342,4 @@ input[type="button"].button-primary:focus {
 .impact-graph-header,
 .scanline-graphs-header>h1 {
   margin-left: 0;
-}
-
-/* Selection tabs */
-#stitching-tabs>div:nth-child(1),
-#stitching-tabs>div:nth-child(2),
-#stitching-tabs>div:nth-child(3) {
-  background-color: white;
-  border-color: transparent;
-}
-
-#stitching-tabs>div.jsx-2137964197.tab.tab--selected {
-  color: #4181FF !important;
-  border-top-color: initial !important;
-  background-color: white;
-}
-
-#stitching-tabs>div:nth-child(3)>span {
-  font-size: 11px;
-}
-
-/*Zoom In*/
-#tabs-content-example>div>button:nth-child(2)>svg {
-  height: 35px;
-  padding: 0 9px;
-  margin-top: 3px;
-}
-
-/*Zoom out */
-#tabs-content-example>div>button:nth-child(3)>svg {
-  height: 35px;
-  padding: 0 9px;
-  margin-top: 3px;
-}
-
-/*Trace */
-#tabs-content-example>div>button:nth-child(4)>svg {
-  height: 40px;
-  margin-top: 4px;
-}
-
-/* Square */
-#tabs-content-example>div>button:nth-child(5)>svg {
-  margin-top: 4px;
-}
-
-/* Left arrow */
-#tabs-content-example>div>button:nth-child(7)>svg {
-  margin-top: 4px;
-}
-
-/*Tag */
-#tabs-content-example>div>button:nth-child(8)>svg {
-margin-top: 4px;
-}
-
-
-/*Estimate Translation */
-#tabs-content-example>div>button:nth-child(9) {
-  margin-left: 0;
-  width: 200px;
-  padding: 0;
-  color: #FBFFFF !important;
-  text-align: center;
-  font-size: 11px;
-  font-family: "Geneva", "Tahoma", "Verdana", "sans-serif";
-  font-weight: 200;
-  line-height: 38px;
-  letter-spacing: .1rem;
-  text-transform: uppercase;
-  text-decoration: none;
-  white-space: nowrap;
-  background-color: #4181FF;
-  border-radius: 4px;
-  border: 1px solid;
-  cursor: pointer;
-  box-sizing: border-box;
-}
-
-
-
-#tabs-content-example>div>button:nth-child(2),
-#tabs-content-example>div>button:nth-child(3),
-#tabs-content-example>div>button:nth-child(4),
-#tabs-content-example>div>button:nth-child(5),
-#tabs-content-example>div>button:nth-child(6),
-#tabs-content-example>div>button:nth-child(7),
-#tabs-content-example>div>button:nth-child(8) {
-  height: 38px;
-  width: 140px;
-  padding: 0;
-  color: #FBFFFF;
-  text-align: center;
-  font-size: 11px;
-  font-family: "Geneva", "Tahoma", "Verdana", "sans-serif";
-  font-weight: 200;
-  letter-spacing: .1rem;
-  text-transform: uppercase;
-  text-decoration: none;
-  white-space: nowrap;
-  background-color: #4181FF;
-  border-radius: 30px;
-  border: 1px solid white;
-  cursor: pointer;
-  box-sizing: border-box;
-}
-
-
-#stitching-result {
-  width: 65vw;
-}
-
-#bla {
-  width: 65vw;
-}
-
-#contrast-stitch>div {
-  width: 80%;
-  margin: 0 auto;
-}
-
-
-#brightness-stitch>div {
-  width: 80%;
-  margin: 0 auto;
-}
-
-#tabs-content-example>div:nth-child(2)>label,
-#tabs-content-example>div:nth-child(3)>label {
-  text-align: center;
-  margin-left: 0px;
-}
-
-.upload_zone {
-  font-family: "Geneva", "Tahoma", "Verdana", "sans-serif";
-  width: 80%;
-  margin-top: 15px;
-}
-
-
-/* Forms
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-input[type="email"],
-input[type="number"],
-input[type="search"],
-input[type="text"],
-input[type="tel"],
-input[type="url"],
-input[type="password"],
-textarea,
-select {
-  margin-left: 9%;
-  height: 30px;
-  width: 50%;
-  box-sizing: border-box;
-  padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
-  background-color: transparent;
-  border: 1px solid #8898B2;
-  border-radius: 4px;
-  box-shadow: none;
-  box-sizing: border-box; 
-  font-family: "Geneva", "Tahoma", "Verdana", "sans-serif";
-  font-size: inherit; 
-  color: #D1D1D1;
-}
-
-/* Removes awkward default styles on some inputs for iOS */
-input[type="email"],
-input[type="number"],
-input[type="search"],
-input[type="text"],
-input[type="tel"],
-input[type="url"],
-input[type="password"],
-textarea {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none; 
-}
-
-textarea {
-  min-height: 65px;
-  padding-top: 6px;
-  padding-bottom: 6px; 
-}
-
-input[type="email"]:focus,
-input[type="number"]:focus,
-input[type="search"]:focus,
-input[type="text"]:focus,
-input[type="tel"]:focus,
-input[type="url"]:focus,
-input[type="password"]:focus,
-textarea:focus,
-select:focus {
-  border: 1px solid #33C3F0;
-  outline: 0; 
-}
-
-label,
-legend {
-  display: block;
-  margin-bottom: 0px; 
-}
-
-fieldset {
-  padding: 0;
-  border-width: 0; 
-}
-
-input[type="checkbox"],
-input[type="radio"] {
-  display: inline; 
-}
-
-label > .label-body {
-  display: inline-block;
-  margin-left: .5rem;
-  font-weight: normal; 
-}
-
-#downsample>label:nth-child(1),
-#downsample>label:nth-child(2),
-#downsample>label:nth-child(3),
-#downsample>label:nth-child(4) {
-  color: white;
-}
-
-#downsample>label:nth-child(1)>input[type=radio] {
-  margin-right: 10px;
-}
-
-#downsample>label:nth-child(2)>input[type=radio] {
-  margin-right: 10px;
-}
-
-#downsample>label:nth-child(3)>input[type=radio] {
-  margin-right: 10px;
-}
-
-#downsample>label:nth-child(4)>input[type=radio] {
-  margin-right: 10px;
-}
-
-
-/* Lists
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-ul {
-  list-style: circle inside; 
-}
-
-ol {
-  list-style: decimal inside; 
-}
-
-ol, ul {
-  padding-left: 0;
-  margin-top: 0; 
-}
-
-ul ul,
-ul ol,
-ol ol,
-ol ul {
-  margin: 1.5rem 0 1.5rem 3rem;
-  font-size: 90%; 
-}
-
-li {
-  margin-bottom: 1rem; 
-}
-
-
-/* Tables
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-table {
-  border-collapse: separate;
-  border: 1px solid black;
-}
-th,
-td {
-  padding: 12px 15px;
-  text-align: center;
-  border-bottom: 1px solid #E1E1E1; 
-}
-th:first-child,
-td:first-child {
-  padding-left: 0; 
-}
-th:last-child,
-td:last-child {
-  padding-right: 0; 
-}
-
-
-/* Spacing
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-button,
-.button {
-  margin-bottom: 0rem; 
-}
-
-input,
-textarea,
-select,
-fieldset {
-  margin-bottom: 0rem; 
-}
-
-pre,
-dl,
-figure,
-table,
-form {
-  margin-bottom: 0rem; 
-}
-
-p,
-ul,
-ol {
-  margin-bottom: 0.75rem; 
-}
-
-/* Utilities
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-.u-full-width {
-  width: 100%;
-  box-sizing: border-box; 
-}
-
-.u-max-full-width {
-  max-width: 100%;
-  box-sizing: border-box; 
-}
-
-.u-pull-right {
-  float: right; 
-}
-
-.u-pull-left {
-  float: left; 
-}
-
-
-/* Misc
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-hr {
-  margin-top: 3rem;
-  margin-bottom: 3.5rem;
-  border-width: 0;
-  border-top: 1px solid #E1E1E1;
-}
-
-
-/* Clearing
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-
-/* Self Clearing Goodness */
-.container:after,
-.row:after,
-.u-cf {
-  content: "";
-  display: table;
-  clear: both;
 }
