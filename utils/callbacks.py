@@ -24,7 +24,13 @@ def impact_figure(impact):
       zaxis_title = 'Z (µm)',
     ),
     font_size = 10,
-    height = 600
+    height = 600,
+    margin = dict(
+      l = 20,
+      r = 10,
+      b = 50,
+      t = 50
+    )
   )
 
   return figure, [
@@ -35,6 +41,15 @@ def impact_figure(impact):
     dcc.Graph(
       id = 'impact-graph',
       figure = figure,
+      config = {
+        'displaylogo': False,
+        'toImageButtonOptions': {
+          'format': 'png',
+          'height': None,
+          'width': None,
+          'scale': 1
+        }
+      }
     )
   ]
 
@@ -353,10 +368,20 @@ def scanline_toolbar(impact):
       className = 'scanline-toolbar-view-all',
       children = [
         html.H6('All Scanlines'),
-        html.Button(
-          'View All (One Figure)',
+        dcc.RadioItems(
           id = 'scanline-view-all-button',
           className = 'scanline-view-all-button',
+          options = [
+            {
+              'label': 'Display All Scans',
+              'value': 'show'
+            },
+            {
+              'label': 'Hide All Scans',
+              'value': 'hide'
+            }
+          ],
+          value = 'show'
         )
       ]
     ),
@@ -370,7 +395,7 @@ def scanline_toolbar(impact):
     )
   ]
 
-def all_scanline_figure(impact):
+def all_scanline_figure(impact, visible = None):
   figure = go.Figure()
 
   figure.add_traces(
@@ -379,7 +404,7 @@ def all_scanline_figure(impact):
         x = scanline.data_corrected_smooth[:, 0],
         y = scanline.data_corrected_smooth[:, 1],
         name = f'Scanline {i + 1}',
-        visible = 'legendonly'
+        visible = visible
       )
       for i, scanline in enumerate(impact.scanlines)
     ]

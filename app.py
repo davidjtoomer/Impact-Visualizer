@@ -139,11 +139,12 @@ def load_data(contents, filenames):
 @app.callback(
   Output('scanline-graph-all-display', 'children'),
   [
-    Input('scanline-view-all-button', 'n_clicks')
+    Input('scanline-view-all-button', 'value'),
   ]
 )
-def display_all_scanlines(n_clicks):
-  if n_clicks and n_clicks % 2:
+def display_all_scanlines(value):
+  if value:
+    if value == 'hide': return callbacks.all_scanline_figure(impact, visible = 'legendonly')
     return callbacks.all_scanline_figure(impact)
   return None
 
