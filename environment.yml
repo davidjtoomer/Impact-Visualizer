@@ -7,8 +7,8 @@ dependencies:
   - pandas=1.0.5
   - xlrd=1.2.0
   - dash
-  - plotly=4.8
   - scikit-learn=0.23.1
   - pip
   - pip:
+    - plotly==4.9.0
     - dash_daq==0.5.0

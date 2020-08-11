@@ -23,7 +23,14 @@ def impact_figure(impact):
       yaxis_title = 'Y (mm)',
       zaxis_title = 'Z (µm)',
     ),
-    font_size = 10
+    font_size = 10,
+    height = 600,
+    margin = dict(
+      l = 20,
+      r = 10,
+      b = 50,
+      t = 50
+    )
   )
 
   return figure, [
@@ -34,6 +41,15 @@ def impact_figure(impact):
     dcc.Graph(
       id = 'impact-graph',
       figure = figure,
+      config = {
+        'displaylogo': False,
+        'toImageButtonOptions': {
+          'format': 'png',
+          'height': None,
+          'width': None,
+          'scale': 1
+        }
+      }
     )
   ]
 
@@ -128,7 +144,7 @@ def update_impact(impact, figure, num_contours, colorscale, projection, view, x_
     aspectratio = dict (
       x = (x_range[1] - x_range[0]) / (y_range[1] - y_range[0]),
       y = 1,
-      z = 10 ** z_scale
+      z = float(z_scale) if z_scale else 1
     )
   )
 
@@ -306,20 +322,21 @@ def impact_toolbar(impact):
       id = 'impact-zscale-container',
       className = 'impact-zscale-container',
       children = [
-        html.H6('Z-Axis Scale'),
+        html.H6('Z-Axis (Proportion to Default)'),
         html.Div(
           id = 'z-scale-slider-container',
           className = 'z-scale-slider-container',
           children = [
-            dcc.Slider(
-              id = 'z-scale-slider',
-              className = 'z-scale-slider',
-              min = -1,
-              max = 1,
+            dcc.Input(
+              id = 'z-scale-input',
+              className = 'z-scale-input',
+              type = 'number',
+              min = 0.1,
+              max = 100,
               step = 0.1,
-              value = 0
-            ),
-            html.Div(id = 'display-z-scale')
+              placeholder = 1,
+              value = 1
+            )
           ]
         )
       ]
@@ -334,7 +351,7 @@ def scanline_toolbar(impact):
         id = f'scanline-toolbar-info-{i}',
         children = [
           html.Button(
-            f'View Scanline {i + 1}: {scanline.ypos:.5f}mm',
+            children = f'View Scanline {i + 1}: {scanline.ypos:.5f}mm',
             className = 'scanline-view-button',
             id = dict(
               type = 'scanline-view-button',
@@ -348,9 +365,67 @@ def scanline_toolbar(impact):
   return [
     html.H2('Scanline Toolbar'),
     html.Div(
+      id = 'scanline-toolbar-view-all',
+      className = 'scanline-toolbar-view-all',
+      children = [
+        html.H6('All Scanlines'),
+        dcc.RadioItems(
+          id = 'scanline-view-all-button',
+          className = 'scanline-view-all-button',
+          options = [
+            {
+              'label': 'Display All Scans',
+              'value': 'show'
+            },
+            {
+              'label': 'Hide All Scans',
+              'value': 'hide'
+            }
+          ],
+          value = 'show'
+        )
+      ]
+    ),
+    html.Div(
       id = 'scanline-toolbar-scanlines',
       className = 'scanline-toolbar-scanlines',
-      children = [scanline for scanline in scanline_info]
+      children = [
+        html.H6('Individual Scanlines'),
+        *[scanline for scanline in scanline_info]
+      ]
+    )
+  ]
+
+def all_scanline_figure(impact, visible = None):
+  figure = go.Figure()
+
+  figure.add_traces(
+    [
+      go.Scatter(
+        x = scanline.data_corrected_smooth[:, 0],
+        y = scanline.data_corrected_smooth[:, 1],
+        name = f'Scanline {i + 1}',
+        visible = visible
+      )
+      for i, scanline in enumerate(impact.scanlines)
+    ]
+  )
+
+  figure.update_layout(
+    height = 500,
+    title_text = 'Superimposed Scanlines',
+    xaxis_title = 'X (mm)',
+    yaxis_title = 'Z (µm)'
+  )
+
+  return [
+    html.Div(
+      id = 'scanline-graphs-header',
+      className = 'scanline-graphs-header'
+    ),
+    dcc.Graph(
+      id = 'scanline-graph-all',
+      figure = figure
     )
   ]
 
@@ -370,7 +445,7 @@ def scanline_figure(impact, index):
     [
       go.Scatter(
         x = scanline.data[:, 0],
-        y = scanline.data[:, 1],
+        y = scanline.data[:, 1]
       ),
       go.Scatter(
         x = scanline.data_corrected[:, 0],
@@ -384,6 +459,9 @@ def scanline_figure(impact, index):
     rows = [1, 2, 3],
     cols = [1, 1, 1]
   )
+
+  figure.update_xaxes(title_text = 'X (mm)')
+  figure.update_yaxes(title_text = 'Y (µm)')
 
   figure.update_layout(
     height = 800, 
