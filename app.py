@@ -77,9 +77,15 @@ app.layout = html.Div(
           ]
         ),
         # empty: impact toolbar
-        html.Div(id = 'impact-toolbar'),
+        html.Div(
+          id = 'impact-toolbar',
+          className = 'impact-toolbar'
+        ),
         # empty: scanline toolbar
-        html.Div(id = 'scanline-toolbar')
+        html.Div(
+          id = 'scanline-toolbar',
+          className = 'scanline-toolbar'
+        )
       ]
     ),
     # right sidebar
@@ -149,27 +155,54 @@ def display_all_scanlines(value):
   return None
 
 @app.callback(
-  Output(dict(
-    type = 'scanline-graph-display',
-    index = MATCH
-  ), 'children'),
   [
-    Input(dict(
-      type = 'scanline-view-button',
-      index = MATCH
-    ), 'n_clicks')
+    Output(
+      dict(
+        type = 'scanline-graph-display',
+        index = MATCH
+      ), 
+      'children'
+    ),
+    Output(
+      dict(
+        type = 'scanline-view-button',
+        index = MATCH
+      ), 
+      'children'
+    )
   ],
   [
-    State(dict(
-      type = 'scanline-view-button',
-      index = MATCH
-    ), 'id')
+    Input(
+      dict(
+        type = 'scanline-view-button',
+        index = MATCH
+      ), 
+      'n_clicks'
+    )
+  ],
+  [
+    State(
+      dict(
+        type = 'scanline-view-button',
+        index = MATCH
+      ), 
+      'id'
+    ),
+    State(
+      dict(
+        type = 'scanline-view-button',
+        index = MATCH
+      ), 
+      'children'
+    )
   ]
 )
-def display_scanline(n_clicks, scanline_id):
-  if n_clicks and n_clicks % 2:
-    return callbacks.scanline_figure(impact, scanline_id['index'])
-  return None
+def display_scanline(n_clicks, scanline_id, curr_text):
+  if curr_text:
+    if n_clicks and n_clicks % 2:
+      return callbacks.scanline_figure(impact, scanline_id['index']), curr_text.replace('View', 'Hide')
+    return None, curr_text.replace('Hide', 'View')
+  return None, None
 
 @app.callback(
   Output('impact-graph', 'figure'),
@@ -180,7 +213,7 @@ def display_scanline(n_clicks, scanline_id):
     Input('view-dropdown', 'value'),
     Input('x-range-slider', 'value'),
     Input('y-range-slider', 'value'),
-    Input('z-scale-slider', 'value')
+    Input('z-scale-input', 'value')
   ]
 )
 def update_impact_graph(num_contours, colorscale, projection, view, x_range, y_range, z_scale):
@@ -227,17 +260,6 @@ def display_yrange(value):
     html.P(f'{value[0]:.3f}')
   ], [
     html.P(f'{value[1]:.3f}')
-  ]
-
-@app.callback(
-  Output('display-z-scale', 'children'),
-  [
-    Input('z-scale-slider', 'value')
-  ]
-)
-def display_zscale(value):
-  return [
-    html.P(f'{(10 ** value):.3f}')
   ]
 
 # run the server

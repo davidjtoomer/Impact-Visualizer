@@ -144,7 +144,7 @@ def update_impact(impact, figure, num_contours, colorscale, projection, view, x_
     aspectratio = dict (
       x = (x_range[1] - x_range[0]) / (y_range[1] - y_range[0]),
       y = 1,
-      z = 10 ** z_scale
+      z = float(z_scale) if z_scale else 1
     )
   )
 
@@ -322,20 +322,21 @@ def impact_toolbar(impact):
       id = 'impact-zscale-container',
       className = 'impact-zscale-container',
       children = [
-        html.H6('Z-Axis Scale (Logarithmic)'),
+        html.H6('Z-Axis (Proportion to Default)'),
         html.Div(
           id = 'z-scale-slider-container',
           className = 'z-scale-slider-container',
           children = [
-            dcc.Slider(
-              id = 'z-scale-slider',
-              className = 'z-scale-slider',
-              min = -1,
-              max = 1,
+            dcc.Input(
+              id = 'z-scale-input',
+              className = 'z-scale-input',
+              type = 'number',
+              min = 0.1,
+              max = 100,
               step = 0.1,
-              value = 0
-            ),
-            html.Div(id = 'display-z-scale')
+              placeholder = 1,
+              value = 1
+            )
           ]
         )
       ]
@@ -350,7 +351,7 @@ def scanline_toolbar(impact):
         id = f'scanline-toolbar-info-{i}',
         children = [
           html.Button(
-            f'View Scanline {i + 1}: {scanline.ypos:.5f}mm',
+            children = f'View Scanline {i + 1}: {scanline.ypos:.5f}mm',
             className = 'scanline-view-button',
             id = dict(
               type = 'scanline-view-button',
@@ -412,7 +413,9 @@ def all_scanline_figure(impact, visible = None):
 
   figure.update_layout(
     height = 500,
-    title_text = 'Superimposed Scanlines'
+    title_text = 'Superimposed Scanlines',
+    xaxis_title = 'X (mm)',
+    yaxis_title = 'Z (µm)'
   )
 
   return [
@@ -442,7 +445,7 @@ def scanline_figure(impact, index):
     [
       go.Scatter(
         x = scanline.data[:, 0],
-        y = scanline.data[:, 1],
+        y = scanline.data[:, 1]
       ),
       go.Scatter(
         x = scanline.data_corrected[:, 0],
@@ -456,6 +459,9 @@ def scanline_figure(impact, index):
     rows = [1, 2, 3],
     cols = [1, 1, 1]
   )
+
+  figure.update_xaxes(title_text = 'X (mm)')
+  figure.update_yaxes(title_text = 'Y (µm)')
 
   figure.update_layout(
     height = 800, 

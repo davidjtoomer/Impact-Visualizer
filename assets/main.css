@@ -327,6 +327,14 @@ input[type="button"] {
   white-space: nowrap;
 }
 
+.z-scale-input {
+  width: 60%;
+}
+
+.impact-toolbar {
+  margin-bottom: 20px;
+}
+
 .button:hover,
 button:hover,
 input[type="submit"]:hover,
