@@ -357,6 +357,51 @@ def scanline_toolbar(impact):
               type = 'scanline-view-button',
               index = i
             )
+          ),
+          html.Div(
+            className = 'scanline-regression-info',
+            id = dict(
+              type = 'scanline-regression-info',
+              index = i
+            ),
+            children = [
+              html.Div(
+                id = 'scanline-regression-slope-container',
+                className = 'scanline-regression-slope-container',
+                children = [
+                  html.P('Slope: '),
+                  dcc.Input(
+                    id = dict(
+                      type = 'scanline-regression-slope',
+                      index = i
+                    ),
+                    className = 'scanline-regression-slope',
+                    type = 'number',
+                    step = 0.01,
+                    value = round(scanline.slope, 2),
+                    placeholder = round(scanline.slope, 2)
+                  ),
+                ]
+              ),
+              html.Div(
+                id = 'scanline-regression-intercept-container',
+                className = 'scanline-regression-intercept-container',
+                children = [
+                  html.P('Intercept: '),
+                  dcc.Input(
+                    id = dict(
+                      type = 'scanline-regression-intercept',
+                      index = i
+                    ),
+                    className = 'scanline-regression-intercept',
+                    type = 'number',
+                    step = 0.01,
+                    value = round(scanline.intercept, 2),
+                    placeholder = round(scanline.intercept, 2)
+                  )
+                ]
+              )
+            ]
           )
         ]
       )
@@ -475,7 +520,10 @@ def scanline_figure(impact, index):
       className = 'scanline-graphs-header'
     ),
     dcc.Graph(
-      id = 'scanline-graph',
+      id = dict(
+        type = 'scanline-graph',
+        index = index
+      ),
       figure = figure
     )
   ]
