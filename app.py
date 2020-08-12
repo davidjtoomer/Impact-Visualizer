@@ -169,6 +169,13 @@ def display_all_scanlines(value):
         index = MATCH
       ), 
       'children'
+    ),
+    Output(
+      dict(
+        type = 'scanline-regression-info',
+        index = MATCH
+      ),
+      'style'
     )
   ],
   [
@@ -200,9 +207,91 @@ def display_all_scanlines(value):
 def display_scanline(n_clicks, scanline_id, curr_text):
   if curr_text:
     if n_clicks and n_clicks % 2:
-      return callbacks.scanline_figure(impact, scanline_id['index']), curr_text.replace('View', 'Hide')
-    return None, curr_text.replace('Hide', 'View')
-  return None, None
+      return callbacks.scanline_figure(impact, scanline_id['index']), curr_text.replace('View', 'Hide'), {'display': 'block'}
+    return None, curr_text.replace('Hide', 'View'), {'display': 'none'}
+  return None, None, None
+
+@app.callback(
+  Output('scanline-graph-all', 'figure'),
+  [
+    Input(
+      dict(
+        type = 'scanline-regression-slope',
+        index = ALL
+      ),
+      'value'
+    ),
+    Input(
+      dict(
+        type = 'scanline-regression-intercept',
+        index = ALL
+      ),
+      'value'
+    )
+  ],
+  [
+    State('scanline-graph-all', 'figure')
+  ]
+)
+def update_global_scanline_figure(slopes, intercepts, fig):
+  if fig and dash.callback_context.triggered:
+    changed = dash.callback_context.triggered[0]['prop_id']
+    index = int(changed[changed.find(':') + 1 : changed.find(',')])
+    if slopes[index] and intercepts[index]:
+      scanline = impact.scanlines[index]
+      scanline.update_regression(slopes[index], intercepts[index])
+      new_data = scanline.data_corrected_smooth[:, 1]
+      fig['data'][index]['y'] = new_data
+  return fig
+
+@app.callback(
+  Output(
+    dict(
+      type = 'scanline-graph',
+      index = MATCH
+    ),
+    'figure'
+  ),
+  [
+    Input(
+      dict(
+        type = 'scanline-regression-slope',
+        index = MATCH
+      ),
+      'value'
+    ),
+    Input(
+      dict(
+        type = 'scanline-regression-intercept',
+        index = MATCH
+      ),
+      'value'
+    )
+  ],
+  [
+    State(
+      dict(
+        type = 'scanline-graph',
+        index = MATCH
+      ),
+      'figure'
+    ),
+    State(
+      dict(
+        type = 'scanline-graph',
+        index = MATCH
+      ),
+      'id'
+    )
+  ]
+)
+def update_individual_scanline_regression(slope, intercept, fig, scanline_id):
+  if fig and dash.callback_context.triggered and slope and intercept:
+    scanline = impact.scanlines[scanline_id['index']]
+    scanline.update_regression(slope, intercept)
+    fig['data'][1]['y'] = scanline.data_corrected[:, 1]
+    fig['data'][2]['y'] = scanline.data_corrected_smooth[:, 1]
+  return fig
 
 @app.callback(
   Output('impact-graph', 'figure'),
@@ -213,10 +302,29 @@ def display_scanline(n_clicks, scanline_id, curr_text):
     Input('view-dropdown', 'value'),
     Input('x-range-slider', 'value'),
     Input('y-range-slider', 'value'),
-    Input('z-scale-input', 'value')
+    Input('z-scale-input', 'value'),
+    Input(
+      dict(
+        type = 'scanline-regression-slope',
+        index = ALL
+      ),
+      'value'
+    ),
+    Input(
+      dict(
+        type = 'scanline-regression-intercept',
+        index = ALL
+      ),
+      'value'
+    )
   ]
 )
-def update_impact_graph(num_contours, colorscale, projection, view, x_range, y_range, z_scale):
+def update_impact_graph(num_contours, colorscale, projection, view, x_range, y_range, z_scale, slopes, intercepts):
+  if dash.callback_context.triggered and slopes and intercepts:
+    for i in range(len(impact.scanlines)):
+      scanline = impact.scanlines[i]
+      scanline.update_regression(slopes[i], intercepts[i])
+      figure.data[0].z[i] = scanline.data_corrected_smooth[:, 1]
   return callbacks.update_impact(impact, figure, num_contours, colorscale, projection, view, x_range, y_range, z_scale)
 
 @app.callback(

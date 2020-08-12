@@ -353,6 +353,18 @@ input[type="button"]:focus {
   margin: 20px 0;
 }
 
+.scanline-regression-info {
+  display: flex;
+  flex-direction: column;
+  width: 91%;
+}
+
+.scanline-regression-slope-container,
+.scanline-regression-intercept-container {
+  display: flex;
+  justify-content: space-between;
+}
+
 .impact-graph-header,
 .scanline-graphs-header {
   background-color:#01183A;
