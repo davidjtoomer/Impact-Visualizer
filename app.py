@@ -176,6 +176,13 @@ def display_all_scanlines(value):
         index = MATCH
       ),
       'style'
+    ),
+    Output(
+      dict(
+        type = 'scanline-local-extrema',
+        index = MATCH
+      ),
+      'style'
     )
   ],
   [
@@ -207,8 +214,8 @@ def display_all_scanlines(value):
 def display_scanline(n_clicks, scanline_id, curr_text):
   if curr_text:
     if n_clicks and n_clicks % 2:
-      return callbacks.scanline_figure(impact, scanline_id['index']), curr_text.replace('View', 'Hide'), {'display': 'block'}
-    return None, curr_text.replace('Hide', 'View'), {'display': 'none'}
+      return callbacks.scanline_figure(impact, scanline_id['index']), curr_text.replace('View', 'Hide'), {'display': 'block'}, {'display': 'block'}
+    return None, curr_text.replace('Hide', 'View'), {'display': 'none'}, {'display': 'none'}
   return None, None, None
 
 @app.callback(
@@ -292,6 +299,72 @@ def update_individual_scanline_regression(slope, intercept, fig, scanline_id):
     fig['data'][1]['y'] = scanline.data_corrected[:, 1]
     fig['data'][2]['y'] = scanline.data_corrected_smooth[:, 1]
   return fig
+
+@app.callback(
+  [
+    Output(
+      dict(
+        type = 'scanline-local-minima',
+        index = MATCH
+      ),
+      'children'
+    ),
+    Output(
+      dict(
+        type = 'scanline-local-maxima',
+        index = MATCH
+      ),
+      'children'
+    )
+  ],
+  [
+    Input(
+      dict(
+        type = 'scanline-regression-slope',
+        index = MATCH
+      ),
+      'value'
+    ),
+    Input(
+      dict(
+        type = 'scanline-regression-intercept',
+        index = MATCH
+      ),
+      'value'
+    )
+  ],
+  [
+    State(
+      dict(
+        type = 'scanline-regression-slope',
+        index = MATCH
+      ),
+      'id'
+    ),
+    State(
+      dict(
+        type = 'scanline-local-minima',
+        index = MATCH
+      ),
+      'children'
+    ),
+    State(
+      dict(
+        type = 'scanline-local-maxima',
+        index = MATCH
+      ),
+      'children'
+    )
+  ]
+)
+def update_local_extrema(slope, intercept, scanline_id, minima, maxima):
+  if dash.callback_context.triggered and slope and intercept:
+    scanline = impact.scanlines[scanline_id['index']]
+    scanline.update_regression(slope, intercept)
+    minima = [html.P(f'({minima[0]:.5f}, {minima[1]:.5f})') for minima in scanline.minima[0]]
+    maxima = [html.P(f'({maxima[0]:.5f}, {maxima[1]:.5f})') for maxima in scanline.maxima[0]]
+  return minima, maxima
+
 
 @app.callback(
   Output('impact-graph', 'figure'),
