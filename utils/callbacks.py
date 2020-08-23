@@ -402,6 +402,39 @@ def scanline_toolbar(impact):
                 ]
               )
             ]
+          ),
+          html.Div(
+            id = dict(
+              type = 'scanline-local-extrema',
+              index = i
+            ),
+            className = 'scanline-local-extrema',
+            children = [
+              # local minima
+              html.H6('Local Minima'),
+              html.Div(
+                id = dict(
+                  type = 'scanline-local-minima',
+                  index = i
+                ),
+                className = 'scanline-local-minima',
+                children = [
+                  html.P(f'({minima[0]:.5f}, {minima[1]:.5f})') for minima in scanline.minima[0]
+                ]
+              ),
+              # local maxima
+              html.H6('Local Maxima'),
+              html.Div(
+                id = dict(
+                  type = 'scanline-local-maxima',
+                  index = i
+                ),
+                className = 'scanline-local-maxima',
+                children = [
+                  html.P(f'({maxima[0]:.5f}, {maxima[1]:.5f})') for maxima in scanline.maxima[0]
+                ]
+              )
+            ]
           )
         ]
       )
