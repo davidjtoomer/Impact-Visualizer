@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn import linear_model
+from scipy.signal import argrelextrema
 
 class ScanLine:
   def __init__(self, data, filename, ystep = 0.02):
@@ -33,8 +34,14 @@ class ScanLine:
   def smooth(self):
     smoothed = np.convolve(self.data_corrected[:, 1], np.ones((self.smooth_width,)) / self.smooth_width, mode='same')
     double_smoothed = np.convolve(smoothed, np.ones((self.smooth_width,)) / self.smooth_width, mode='same')
+    triple_smoothed = np.convolve(double_smoothed, np.ones((self.smooth_width,)) / self.smooth_width, mode='same')
     self.data_corrected_smooth = np.copy(self.data_corrected)
-    self.data_corrected_smooth[:, 1] = double_smoothed
+    self.data_corrected_smooth[:, 1] = triple_smoothed
+    
+    self.maxima_xpos = argrelextrema(self.data_corrected_smooth[:, 1], np.greater)
+    self.maxima = [self.data_corrected_smooth[xpos] for xpos in self.maxima_xpos]
+    self.minima_xpos = argrelextrema(self.data_corrected_smooth[:, 1], np.less)
+    self.minima = [self.data_corrected_smooth[xpos] for xpos in self.minima_xpos]
 
   def update_regression(self, slope, intercept):
     self.slope = slope
