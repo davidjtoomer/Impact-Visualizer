@@ -8,6 +8,7 @@ dependencies:
   - xlrd=1.2.0
   - dash
   - scikit-learn=0.23.1
+  - scipy=1.5.2
   - pip
   - pip:
     - plotly==4.9.0
